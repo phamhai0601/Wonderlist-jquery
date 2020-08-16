@@ -29,10 +29,9 @@ var arrTaskItem = [
 			'category_id'	: 0,
 			'status'		: 0,
 			'start' 		: 0,
-			'title'			:'test1',
+			'title'			:'test2',
 			'time'  		:'2018-07-22',
-			'clock' 		:'2020-07-15T16:39:57',
-			'note'			:'',
+			'clock' 		:'2020-07-15T16:39:57',	
 			'file'			:'',
 			'comment'		: [
 				{
@@ -43,7 +42,13 @@ var arrTaskItem = [
 			'subtask'		:[
 				{
 					'subtask_id'	:0,
-					'content'	:'asdas',
+					'content'	:'asdas12312322222222',
+				}
+			],
+			'note'			:[
+				{
+					'note_id'	: 0,
+					'content'	: '123433333',
 				}
 			],
 		},
@@ -54,54 +59,35 @@ var arrTaskItem = [
 			'start' 		: 1,
 			'title'			:'test2',
 			'time'  		:'2018-07-22',
-			'clock' 		:'2020-07-15T16:39:57',
-			'note'			:'',
+			'clock' 		:'2020-07-15T16:39:57',	
 			'file'			:'',
 			'comment'		: [
 				{
 					'comment_id'	: 0,
-					'content'		:"asdsdasd"
+					'content'		:"test-comment"
 				}
 			],
 			'subtask'		:[
 				{
 					'subtask_id'	:0,
-					'content'	:'asdas',
+					'content'	:'asdas1231232',
+				}
+			],
+			'note'			:[
+				{
+					'note_id'	: 0,
+					'content'	: '1234',
 				}
 			],
 		},
 		{
 			'id' 			: 2,
-			'category_id'	: 0,
-			'status'		: 1,
+			'category_id'	: 1,
+			'status'		: 0,
 			'start' 		: 0,
-			'title'			:'test1',
-			'time'  		:'2018-08-15',
-			'clock' 		:'2020-07-15T16:39:57',
-			'note'			:'',
-			'file'			:'',
-			'comment'		: [
-				{
-					'comment_id'	: 0,
-					'content'		:"asdsdasd"
-				}
-			],
-			'subtask'		:[
-				{
-					'subtask_id'	:0,
-					'content'	:'asdas',
-				}
-			],
-		},
-		{
-			'id' 			: 3,
-			'category_id'	: 0,
-			'status'		: 1,
-			'start' 		: 1,
 			'title'			:'test2',
 			'time'  		:'2018-07-22',
-			'clock' 		:'2020-07-15T16:39:57',
-			'note'			:'',
+			'clock' 		:'2020-07-15T16:39:57',	
 			'file'			:'',
 			'comment'		: [
 				{
@@ -112,7 +98,13 @@ var arrTaskItem = [
 			'subtask'		:[
 				{
 					'subtask_id'	:0,
-					'content'	:'asdas',
+					'content'	:'asdas1231232',
+				}
+			],
+			'note'			:[
+				{
+					'note_id'	: 0,
+					'content'	: '1234',
 				}
 			],
 		},
