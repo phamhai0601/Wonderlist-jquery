@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+	var elementTaskItem;
 	//function Show
 	function showCategory(){
 		for(let i = 0; i < arrCategory.length; i++){
@@ -128,7 +128,18 @@ $(document).ready(function(){
 	}
 
 	function showContextMenu(x,y,id){
+		console.log(id);
+		console.log(arrTaskItem[id].status);
 		$('#context-item').css('display','block');
+		if(arrTaskItem[id].status == 0){
+			$('#mark-as-completed').css('display','block')
+			$('#mark-as-un-completed').css('display','none');
+		}else{
+			$('#mark-as-completed').css('display','none');
+			$('#mark-as-un-completed').css('display','block');
+		}
+
+		$('#context-item').attr('item-task-id',id);
 		$('#context-item').css('top',y);
 		$('#context-item').css('left',x);
 		var height = $('body').offsetHeight - y;
@@ -177,10 +188,12 @@ $(document).ready(function(){
 
 	function addEventTaskItem(element){ //add su kien cho nhieu element
 		element.contextmenu(function(event){
-			showContextMenu(event.clientX,event.clientY,$(this).attr('id'));
+			elementTaskItem = $(this);
+			showContextMenu(event.clientX,event.clientY,$(this).attr('data-id'));
 			event.preventDefault();
 		});
 		addEventDbClickTaskItem(element);
+		addEventCheckBoxSucessTaskItem(element);
 	}
 
 	function addEventActiveMenuSideBar(element){
@@ -188,7 +201,7 @@ $(document).ready(function(){
 			removeClassActive('#list-category li');
 			$(this).addClass('active');
 			removeItemTaskCenter();
-			showItemTaskCenter($(this).attr('id'));
+			showItemTaskCenter();
 
 		});
 	}
@@ -224,44 +237,22 @@ $(document).ready(function(){
 			}	
 		});
 	}
+
+	function addEventCheckBoxSucessTaskItem(element){
+		var id = element.attr('data-id');
+		element.find('span:first-child').click(function(){
+			console.log($(this));
+			arrTaskItem[id].status = arrTaskItem[id].status == 0?1:0; 
+			removeItemTaskCenter();
+			showItemTaskCenter();
+		});
+	}
 	//-------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	//function auto run
 	showCategory();
 	showItemTaskCenter();
+	//--------------------
 	
 	//modal create list
 	$('#side-bar-action').click(function(){
@@ -337,6 +328,33 @@ $(document).ready(function(){
 		element.removeClass('reponsive-280');
 	});
 	//-------------------------------
+	$('#close-right').click(function(){
+		$('#right-content').css('width','0px');
+	});
 
+	// Mark as Completed 
+	$('#mark-as-completed').click(function(){ 
+		 var id = $('#context-item').attr('item-task-id');
+		 arrTaskItem[id].status = 1;
+		 removeItemTaskCenter();
+		 showItemTaskCenter();
+		 $('#context-item').css('display','none');
+	});
 
+	$('#mark-as-un-completed').click(function(){
+		 var id = $('#context-item').attr('item-task-id');
+		 arrTaskItem[id].status = 0;
+		 removeItemTaskCenter();
+		 showItemTaskCenter();
+		 $('#context-item').css('display','none');		
+	});
+	//------------------------------------
+
+	$('#mark-as-start').click(function(){
+		var id = elementTaskItem.attr('data-id');
+		elementTaskItem.find('p + span').html(arrTaskItem[id].start==0?iconRedStart:iconStart);
+		arrTaskItem[id].start = arrTaskItem[id].start==0?1:0;
+		$('#context-item').css('display','none');
+		showMainRigt(id);
+	});
 });
