@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var elementTaskItem;
+	var elementTaskItem = null;
 	//function Show
 	function showCategory(){
 		for(let i = 0; i < arrCategory.length; i++){
@@ -45,6 +45,11 @@ $(document).ready(function(){
 					console.log(item_task);
 					$('#task-complete').append(item_task);
 
+				}
+				if($('#right-content').css('width') != '0px' ){
+					if($('#right-content').attr('itemtask-id') == arrTaskItem[i].id){
+						item_task.addClass('active');
+					}
 				}
 				addEventTaskItem(item_task);				
 			}
@@ -163,6 +168,10 @@ $(document).ready(function(){
 	function getIdSideBarMenu(){
 		return $('#list-category').find('li[class=active]').attr('id');
 	}
+
+	function gerIdActiveItemTask(){
+		$('#')
+	}
 	
 	//--------------------------
 
@@ -240,7 +249,7 @@ $(document).ready(function(){
 
 	function addEventCheckBoxSucessTaskItem(element){
 		var id = element.attr('data-id');
-		element.find('span:first-child').click(function(){
+		element.find('span[class=icon-item-task]').click(function(){
 			console.log($(this));
 			arrTaskItem[id].status = arrTaskItem[id].status == 0?1:0; 
 			removeItemTaskCenter();
@@ -356,5 +365,6 @@ $(document).ready(function(){
 		arrTaskItem[id].start = arrTaskItem[id].start==0?1:0;
 		$('#context-item').css('display','none');
 		showMainRigt(id);
+		elementTaskItem = null;
 	});
 });
