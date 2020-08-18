@@ -19,7 +19,6 @@ var arrCategory = [
 			'id' : 4,
 			'name' : 'Inbox Coppy'
 		},
-
 	];
 
 

@@ -2,47 +2,48 @@ $(document).ready(function(){
 	var elementTaskItem = null;
 	//function Show
 	function showCategory(){
-		for(let i = 0; i < arrCategory.length; i++){
+		arrCategory.forEach(function(item){
 			var icon;
-			if(i==0){icon = cartegoryInbox}
-			else if(i==1){icon = categoryToday}
-			else if(i==2){icon = categoryWeek}
+			if(item.id==0){icon = cartegoryInbox}
+			else if(item.id==1){icon = categoryToday}
+			else if(item.id==2){icon = categoryWeek}
 			else{icon = cartegoryMore}
-			var item_Category = $('<li></li>');
-			item_Category.addClass(i==0?"active":"");
-			item_Category.attr('id',arrCategory[i].id);
+			var item_Category = $('<li id='+item.id+'></li>');
+			item_Category.addClass(item.id==0?"active":"");
 			item_Category.html(itemCategory);
 			item_Category.find('p > span:first-child').html(icon);
-			item_Category.find('p > span:last-child').html(arrCategory[i].name);
+			item_Category.find('p > span:last-child').html(item.name);
 			$('#list-category').append(item_Category);
-			addEventMenuSideBar(item_Category);
-
-		}
+			addEventMenuSideBar(item_Category);	  		
+		});
 	}
 
-	function showItemTaskCenter(){
-		for(let i = 0; i < arrTaskItem.length; i++){
-			if(arrTaskItem[i].category_id == getIdSideBarMenu()){
-				if(arrTaskItem[i].status == 0){
+	function removeCategory(){
+		$('#list-category li').remove();
+	}
+
+	function showItemTaskCenter(arr){
+		for(let i = 0; i < arr.length; i++){
+			if(arr[i].category_id == getIdSideBarMenu()){
+				if(arr[i].status == 0){
 					var item_task = $('<div class="item-task" draggable="true"></div>');
-					item_task.attr('data-id',arrTaskItem[i].id);
-					item_task.attr('category-id',arrTaskItem[i].category_id);
+					item_task.attr('data-id',arr[i].id);
+					item_task.attr('category-id',arr[i].category_id);
 					item_task.html(itemTaskUnSuccess);
-					if(arrTaskItem[i].start == 1){
+					if(arr[i].start == 1){
 						item_task.find('p + span:last-child').html(iconRedStart);
 					}
-					item_task.find('p > span').text(arrTaskItem[i].title);
+					item_task.find('p > span').text(arr[i].title);
 					$('#center-task').append(item_task);
 				}else{
 					var item_task = $('<div class="item-task" draggable="true"></div>');
-					item_task.attr('data-id',arrTaskItem[i].id);
-					item_task.attr('category-id',arrTaskItem[i].category_id);
+					item_task.attr('data-id',arr[i].id);
+					item_task.attr('category-id',arr[i].category_id);
 					item_task.html(itemTaskSuccess);
-					if(arrTaskItem[i].start == 1){
+					if(arr[i].start == 1){
 						item_task.find('p + span:last-child').html(iconRedStart);
 					}
-					item_task.find('p > span:first-child').text(arrTaskItem[i].title);
-					console.log(item_task);
+					item_task.find('p > span:first-child').text(arr[i].title);
 					$('#task-complete').append(item_task);
 
 				}
@@ -53,7 +54,6 @@ $(document).ready(function(){
 				}
 				addEventTaskItem(item_task);				
 			}
-
 		}
 	}
 
@@ -133,8 +133,6 @@ $(document).ready(function(){
 	}
 
 	function showContextMenu(x,y,id){
-		console.log(id);
-		console.log(arrTaskItem[id].status);
 		$('#context-item').css('display','block');
 		if(arrTaskItem[id].status == 0){
 			$('#mark-as-completed').css('display','block')
@@ -143,7 +141,6 @@ $(document).ready(function(){
 			$('#mark-as-completed').css('display','none');
 			$('#mark-as-un-completed').css('display','block');
 		}
-
 		$('#context-item').attr('item-task-id',id);
 		$('#context-item').css('top',y);
 		$('#context-item').css('left',x);
@@ -172,13 +169,87 @@ $(document).ready(function(){
 	function gerIdActiveItemTask(){
 		$('#')
 	}
-	
+
+	function focusInputAddTask(){
+		console.log('test2');
+		//$('#addtask-starred').attr('style','display:block');
+		$('#addtask-starred').css('display','block');
+		$('#addtask-today').css('display','block');
+		$('#icon-voice').css('display','block');
+		$('#icon-plus').css('display','none');	
+	}
+
+	function unForcusInputAddTask(){
+		$('#addtask-starred').css('display','none');
+		$('#addtask-today').css('display','none');
+		$('#icon-voice').css('display','none');
+		$('#icon-plus').css('display','block');			
+	}
+
+	function addTaskItem(value){
+		var date = new Date();
+		var day = date.getFullYear()+'-'+(String(date.getMonth()+1).length<2?'0'+String(date.getMonth()+1):String(date.getMonth()+1))+'-'+(String(date.getDate()).length<2?'0'+String(date.getDate()):String(date.getDate()));
+		var item_note =
+		{
+			'id' 			: arrTaskItem[arrTaskItem.length-1].id+1,
+			'category_id'	: getIdSideBarMenu(),
+			'status'		: 0,
+			'start' 		: $('#addtask-starred').attr('markstart')==undefined?0:1,
+			'title'			: value,
+			'time'  		: day,
+			'clock' 		: '2020-07-15T16:39:57',	
+			'file'			: '',
+			'comment'		: [
+			],
+			'subtask'		: [
+			],
+			'note'			: [
+			],
+		};
+		arrTaskItem.push(item_note);
+		removeItemTaskCenter();
+		showItemTaskCenter(arrTaskItem);
+	}
+
+	function maskStart(element,id){ // elemen is Span Tag
+		arrTaskItem[id].start = arrTaskItem[id].start==1?0:1; 
+		removeItemTaskCenter();
+		showItemTaskCenter(arrTaskItem);
+	}
+
+	function addCategory(val){
+		console.log('add category');
+		var item_note =
+		{
+			'id'      : arrCategory[arrCategory.length-1].id+1,
+			'name'	  : val,
+		}
+		arrCategory.push(item_note);
+		removeCategory();
+		showCategory();
+	}
+
+	function removeItem(arr,selector,id){
+		arr.splice(arr.findIndex(item => item.id == $('selector').attr(id)), 1);
+	}
+
 	//--------------------------
 
 	//Function addEvent
+	function enterInputAddTask(element,e){
+		if(e.keyCode == 13){
+			if(element.val().length > 0){
+				addTaskItem(element.val(),e);
+				element.val('');			
+			}else{
+				alert('Bạn chưa nhập tên task item.');
+			}
+
+		}		
+	}
+
 	function addEventMenuSideBar(element){
 		element.contextmenu(function(event){
-
 			showMenuSideBar(event.clientX,event.clientY,$(this).attr('id'));
 			event.preventDefault();
 		});
@@ -187,7 +258,7 @@ $(document).ready(function(){
 
 	function addEventDbClickTaskItem(element){
 		element.dblclick(function(){
-			$('#center-task div').removeClass('active');
+			removeClassActive('.item-task');
 			$(this).addClass('active');
 			showMainRigt($(this).attr('data-id'));//Show Main Right với từng id
 		});
@@ -198,11 +269,14 @@ $(document).ready(function(){
 	function addEventTaskItem(element){ //add su kien cho nhieu element
 		element.contextmenu(function(event){
 			elementTaskItem = $(this);
+			console.log(event.clientX,event.clientY);
 			showContextMenu(event.clientX,event.clientY,$(this).attr('data-id'));
 			event.preventDefault();
 		});
 		addEventDbClickTaskItem(element);
 		addEventCheckBoxSucessTaskItem(element);
+		addEventClickActiveTaskItem(element);
+		addEventMaskStart(element);
 	}
 
 	function addEventActiveMenuSideBar(element){
@@ -210,7 +284,8 @@ $(document).ready(function(){
 			removeClassActive('#list-category li');
 			$(this).addClass('active');
 			removeItemTaskCenter();
-			showItemTaskCenter();
+			showItemTaskCenter(arrTaskItem);
+
 
 		});
 	}
@@ -250,17 +325,34 @@ $(document).ready(function(){
 	function addEventCheckBoxSucessTaskItem(element){
 		var id = element.attr('data-id');
 		element.find('span[class=icon-item-task]').click(function(){
-			console.log($(this));
 			arrTaskItem[id].status = arrTaskItem[id].status == 0?1:0; 
 			removeItemTaskCenter();
-			showItemTaskCenter();
+			showItemTaskCenter(arrTaskItem);
 		});
 	}
+
+	function addEventClickActiveTaskItem(element){
+		element.click(function(){
+			removeClassActive('.item-task');
+			$(this).addClass('active');
+		});	
+	}
+
+	function addEventMaskStart(element){
+		element.find('p + span').click(function(){
+			maskStart($(this),element.attr('data-id'));
+			if(element.attr('data-id') == $('#right-content').attr('itemtask-id')){
+				showMainRigt(element.attr('data-id'));
+			}
+		});
+	}
+
+
 	//-------------------------------
 
 	//function auto run
 	showCategory();
-	showItemTaskCenter();
+	showItemTaskCenter(arrTaskItem);
 	//--------------------
 	
 	//modal create list
@@ -269,6 +361,11 @@ $(document).ready(function(){
 	});
 
 	$('#create-list ul li button[class="btn-cancel"]').click(function(){
+		closeModelCreateList();
+	});
+
+	$('#create-list ul li button[class="btn-submit"]').click(function(){
+		addCategory($('#create-list input[name=create]').val());
 		closeModelCreateList();
 	});
 	//-------------------
@@ -300,7 +397,10 @@ $(document).ready(function(){
 				$('#context-item').css('display','none')
 			}				
 		}
-
+		
+		if($('.add-task').has(event.target).length < 1){
+			unForcusInputAddTask();
+		}
 	});
 
 	$(document).keyup(function(event){
@@ -346,7 +446,7 @@ $(document).ready(function(){
 		 var id = $('#context-item').attr('item-task-id');
 		 arrTaskItem[id].status = 1;
 		 removeItemTaskCenter();
-		 showItemTaskCenter();
+		 showItemTaskCenter(arrTaskItem);
 		 $('#context-item').css('display','none');
 	});
 
@@ -354,7 +454,7 @@ $(document).ready(function(){
 		 var id = $('#context-item').attr('item-task-id');
 		 arrTaskItem[id].status = 0;
 		 removeItemTaskCenter();
-		 showItemTaskCenter();
+		 showItemTaskCenter(arrTaskItem);
 		 $('#context-item').css('display','none');		
 	});
 	//------------------------------------
@@ -367,4 +467,79 @@ $(document).ready(function(){
 		showMainRigt(id);
 		elementTaskItem = null;
 	});
+
+	//Input Task ITem....
+	$('#input-add-task').keyup(function(){
+		enterInputAddTask($(this),event);
+	});
+	
+	$('#input-add-task').click(function(){
+		focusInputAddTask();
+	});
+
+	$('#addtask-starred').click(function(){
+		if($(this).attr('markstart') != undefined){
+			$(this).find('#fill-starred').css('opacity','0');
+			$(this).removeAttr('markstart');
+		}else{
+			$(this).find('#fill-starred').css('opacity','unset');
+			$(this).attr('markstart','');
+		}
+	});	
+
+	//-------------------
+
+	//functions sort 
+	function compare(a, b) {
+	  const bandA = a.title.toUpperCase();
+	  const bandB = b.title.toUpperCase();
+	  let comparison = 0;
+	  if(sort == "ASC"){
+	  	bandA > bandB?comparison = 1:comparison = -1;
+	  }else{
+	  	bandA > bandB?comparison = -1:comparison = 1;
+	  }
+	  return comparison;
+	}
+	var sort;
+	$('#sort').click(function(){
+		sort= $(this).attr('sort');
+		arrTaskItem.sort(compare);
+		$(this).attr('sort',sort == "ASC"?"DESC":"ASC");
+		removeItemTaskCenter();
+		showItemTaskCenter();
+	});
+
+	//search--------------
+	function searchTilt(title){
+		return title.indexOf($('#search-task-input').val()) > -1;
+	}
+
+	$('#search-task-input').keydown(function(e){
+		if(e.keyCode == 13){
+			var resultAarray = $.grep(arrTaskItem, function(v) {
+	    		return v.title.indexOf($('#search-task-input').val()) > -1;
+			});
+        	removeItemTaskCenter();
+        	showItemTaskCenter(resultAarray);
+		}
+
+	});
+
+	$('#input-subtask').keydown(function(e){
+
+	});
+
+	$('#delete-list').click(function(){
+		console.log($('#modal-side-bar').attr('category-id'));
+		//arrCategory.splice(arrCategory.findIndex(item => item.id == $('#modal-side-bar').attr('category-id')), 1)
+		removeItem(arrCategory,'#modal-side-bar','category-id');
+		removeCategory();
+		showCategory();
+	});
+
+	$('#delete-todo').click(function(){
+		console.log($('#context-item').attr('item-task-id'));
+	});
+
 });
