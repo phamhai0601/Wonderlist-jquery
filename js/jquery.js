@@ -23,38 +23,37 @@ $(document).ready(function(){
 	}
 
 	function showItemTaskCenter(arr){
-		for(let i = 0; i < arr.length; i++){
-			if(arr[i].category_id == getIdSideBarMenu()){
-				if(arr[i].status == 0){
+		arr.forEach(function(item){
+			if(item.category_id == getIdSideBarMenu()){
+				if(item.status == 0){
 					var item_task = $('<div class="item-task" draggable="true"></div>');
-					item_task.attr('data-id',arr[i].id);
-					item_task.attr('category-id',arr[i].category_id);
+					item_task.attr('data-id',item.id);
+					item_task.attr('category-id',item.category_id);
 					item_task.html(itemTaskUnSuccess);
-					if(arr[i].start == 1){
+					if(item.start == 1){
 						item_task.find('p + span:last-child').html(iconRedStart);
 					}
-					item_task.find('p > span').text(arr[i].title);
+					item_task.find('p > span').text(item.title);
 					$('#center-task').append(item_task);
 				}else{
 					var item_task = $('<div class="item-task" draggable="true"></div>');
-					item_task.attr('data-id',arr[i].id);
-					item_task.attr('category-id',arr[i].category_id);
+					item_task.attr('data-id',item.id);
+					item_task.attr('category-id',item.category_id);
 					item_task.html(itemTaskSuccess);
-					if(arr[i].start == 1){
+					if(item.start == 1){
 						item_task.find('p + span:last-child').html(iconRedStart);
 					}
-					item_task.find('p > span:first-child').text(arr[i].title);
+					item_task.find('p > span:first-child').text(item.title);
 					$('#task-complete').append(item_task);
-
 				}
 				if($('#right-content').css('width') != '0px' ){
-					if($('#right-content').attr('itemtask-id') == arrTaskItem[i].id){
+					if($('#right-content').attr('itemtask-id') == item.id){
 						item_task.addClass('active');
 					}
 				}
-				addEventTaskItem(item_task);				
-			}
-		}
+				addEventTaskItem(item_task);			
+			}  		
+		});
 	}
 
 	function removeItemTaskCenter(){
@@ -63,29 +62,30 @@ $(document).ready(function(){
 	}
 
 	function showMainRigt(id){
+		var item = getArrById(arrTaskItem,id);
 		removeAllSubTask();
 		$('#right-content').css('width','370px');
 		$('#right-content').attr('itemtask-id',id);
-		$('.head-right-content span:first-child').html(arrTaskItem[id].status==0?checkboxUnSucces:checkBoxSuccess);
-		$('.head-right-content input').attr('value',arrTaskItem[id].title);
-		$('.head-right-content span:last-child').html(arrTaskItem[id].start==0?iconStart:iconRedStart);
-		$('.center-right-content ul li input[type="date"]').attr('value',arrTaskItem[id].time);
-		$('.center-right-content ul li input[type="datetime-local"]').attr('value',arrTaskItem[id].clock);
-		if(arrTaskItem[id].subtask.length > 0){
-			for(let i = 0; i < arrTaskItem[id].subtask.length; i++){
-				var item_subtask = $('<li subtask-id='+arrTaskItem[id].subtask[i].subtask_id+'></li>');
+		$('.head-right-content span:first-child').html(item.status==0?checkboxUnSucces:checkBoxSuccess);
+		$('.head-right-content input').attr('value',item.title);
+		$('.head-right-content span:last-child').html(item.start==0?iconStart:iconRedStart);
+		$('.center-right-content ul li input[type="date"]').attr('value',item.time);
+		$('.center-right-content ul li input[type="datetime-local"]').attr('value',item.clock);
+		if(item.subtask.length > 0){
+			for(let i = 0; i < item.subtask.length; i++){
+				var item_subtask = $('<li subtask-id='+item.subtask[i].subtask_id+'></li>');
 				item_subtask.html(subtask);
-				item_subtask.find('span:first-child').text(arrTaskItem[id].subtask[i].content);
+				item_subtask.find('span:first-child').text(item.subtask[i].content);
 				$('#box-subtask').append(item_subtask);
 				addEvenRemoveSubTask(item_subtask);
 			}			
 		}
 
-		if(arrTaskItem[id].note.length > 0){
+		if(item.note.length > 0){
 			for(let i = 0; i < arrTaskItem[id].note.length; i++){
-				var item_note = $('<li note-id='+arrTaskItem[id].note[i].note_id+'></li>');
+				var item_note = $('<li note-id='+item.note[i].note_id+'></li>');
 				item_note.html(subtask);
-				item_note.find('span:first-child').text(arrTaskItem[id].note[i].content);
+				item_note.find('span:first-child').text(item.note[i].content);
 				$('#box-note').append(item_note);
 				addEvenRemoveNote(item_note);			
 			}
@@ -133,8 +133,9 @@ $(document).ready(function(){
 	}
 
 	function showContextMenu(x,y,id){
+		var item = getArrById(arrTaskItem,id);
 		$('#context-item').css('display','block');
-		if(arrTaskItem[id].status == 0){
+		if(item.status == 0){
 			$('#mark-as-completed').css('display','block')
 			$('#mark-as-un-completed').css('display','none');
 		}else{
@@ -212,13 +213,16 @@ $(document).ready(function(){
 	}
 
 	function maskStart(element,id){ // elemen is Span Tag
-		arrTaskItem[id].start = arrTaskItem[id].start==1?0:1; 
+		
+		var item = getArrById(arrTaskItem,id);
+		console.log(item);
+		item.start = item.start==1?0:1; 
 		removeItemTaskCenter();
 		showItemTaskCenter(arrTaskItem);
 	}
 
+
 	function addCategory(val){
-		console.log('add category');
 		var item_note =
 		{
 			'id'      : arrCategory[arrCategory.length-1].id+1,
@@ -230,9 +234,21 @@ $(document).ready(function(){
 	}
 
 	function removeItem(arr,selector,id){
-		arr.splice(arr.findIndex(item => item.id == $('selector').attr(id)), 1);
+		arr.splice(arr.findIndex(item => item.id == $(selector).attr(id)), 1);
 	}
 
+	function getArrById(arr,id){
+		return arr[arr.findIndex(item => item.id == id)];
+	}
+
+	function addSubTask(val){
+		var item = getArrById(arrTaskItem,$('#right-content').attr('itemtask-id'));
+		var item_subtask = {
+			'id'		: item.comment[item.comment.length-1].comment_id+1,
+			'content'	: val,
+		}
+		item.comment.push(item_subtask);
+	}
 	//--------------------------
 
 	//Function addEvent
@@ -527,7 +543,10 @@ $(document).ready(function(){
 	});
 
 	$('#input-subtask').keydown(function(e){
-
+		if(e.keyCode == 13){
+			addSubTask($(this).val());
+			$('#box-subtask li').remove();
+		}
 	});
 
 	$('#delete-list').click(function(){
@@ -539,7 +558,15 @@ $(document).ready(function(){
 	});
 
 	$('#delete-todo').click(function(){
-		console.log($('#context-item').attr('item-task-id'));
+		var dataConfirm = confirm("Bạn muốn xóa task item?");
+		if(dataConfirm == true){
+			removeItem(arrTaskItem,'#context-item','item-task-id');
+			$('#context-item').css('display','none');
+			removeItemTaskCenter();
+			showItemTaskCenter(arrTaskItem);
+		}
 	});
+
+
 
 });
