@@ -241,6 +241,7 @@ $(document).ready(function(){
 		return arr[arr.findIndex(item => item.id == id)];
 	}
 
+<<<<<<< HEAD
 	function addSubTask(val){
 		var item = getArrById(arrTaskItem,$('#right-content').attr('itemtask-id'));
 		var item_subtask = {
@@ -249,6 +250,68 @@ $(document).ready(function(){
 		}
 		item.comment.push(item_subtask);
 	}
+=======
+	function removeItems(arr,iId){
+		console.log(iId);
+		arr.splice(arr.findIndex(item => item.id == iId), 1);
+	}
+
+	function showConfirmRemoveTaskItem(id){
+		$('#alert-confirm-delete').css('display','block');
+		$('#alert-remove').attr('task-id',id);
+	}
+
+	function removeTaskItem(id){
+		$('#delete-to-do').click(function(){
+			removeItems(arrTaskItem,id);
+			$('#alert-confirm-delete').css('display','none');
+			removeItemTaskCenter();
+			showItemTaskCenter(arrTaskItem);
+		});
+	}
+
+	function addSubTask(id){
+
+	}
+
+	function dragStart(element) {
+  		leaveItem = element;
+	}
+
+	function drop(event) {
+	  event.preventDefault();
+	  var node = leaveItem.cloneNode(true);
+	  hideTaskItem(leaveItem);
+	  var timeOut = setTimeout(function(){
+	  	  	leaveItem.remove();
+	  		leaveItem = null;
+	  },400);
+	  var centerTask = document.getElementById("center-task");
+	  var nodeTarget = event.target;
+	  while(nodeTarget.nodeName != "DIV"){
+	  	nodeTarget = nodeTarget.parentElement;
+	  }
+	  centerTask.insertBefore(node,nodeTarget.nextSibling);
+	  // addEventCenterTaskItem(node);
+	  // removeMarginBottomCenterTaskItem(centerTask);
+	}
+
+	function allowDrop(event) {
+  		event.preventDefault();
+	}
+
+	function dragLeave(nodeTarget,element){
+		var nodeParent = element;
+		while(nodeParent.className != "center-task"){
+			nodeParent = nodeParent.parentElement;
+		}
+		removeMarginBottomCenterTaskItem(nodeParent);
+
+		nodeTarget.style.marginBottom = "1px";
+		nodeTarget.style.boxShadow = "none";
+	}
+
+>>>>>>> hp
 	//--------------------------
 
 	//Function addEvent
@@ -293,6 +356,7 @@ $(document).ready(function(){
 		addEventCheckBoxSucessTaskItem(element);
 		addEventClickActiveTaskItem(element);
 		addEventMaskStart(element);
+		addEventDrag(element);
 	}
 
 	function addEventActiveMenuSideBar(element){
@@ -360,6 +424,26 @@ $(document).ready(function(){
 			if(element.attr('data-id') == $('#right-content').attr('itemtask-id')){
 				showMainRigt(element.attr('data-id'));
 			}
+		});
+	}
+
+	var leaveItem = null;
+	function addEventDrag(element){
+		$('div[class=item-task]').draggable({
+		    scroll: true,
+		    axis: "x",
+		    containment: "body",
+		    revert: true,
+		    helper: "clone",
+		    disable: false,
+		    start: function( event, ui ) {
+		    	console.log('1');
+		    },
+		    drag: function( event, ui ) {
+		    },
+		    stop:function( event, ui ) {
+		        console.log('2');
+		    }			
 		});
 	}
 
@@ -433,7 +517,7 @@ $(document).ready(function(){
 
 	// button reponsive menu side bar
 	$('#left-search').click(function(){
-		if(screen.width > 1000){
+		if($(document).width() > 1000){
 			if($('#left-content').attr('class').indexOf('reponsive-50') > -1){
 				$('#left-content').removeClass('reponsive-50');
 			}else{
@@ -441,8 +525,10 @@ $(document).ready(function(){
 			}
 		}else{
 			if($('#left-content').attr('class').indexOf('reponsive-280') > -1){
+				console.log('2');
 				$('#left-content').removeClass('reponsive-280');
 			}else{
+				console.log('1');
 				$('#left-content').addClass('reponsive-280');
 			}		
 		}
@@ -544,20 +630,24 @@ $(document).ready(function(){
 
 	$('#input-subtask').keydown(function(e){
 		if(e.keyCode == 13){
+<<<<<<< HEAD
 			addSubTask($(this).val());
 			$('#box-subtask li').remove();
+=======
+			var id = $('#right-content').attr('itemtask-id');
+			addSubTask(id);
+>>>>>>> hp
 		}
 	});
 
 	$('#delete-list').click(function(){
-		console.log($('#modal-side-bar').attr('category-id'));
-		//arrCategory.splice(arrCategory.findIndex(item => item.id == $('#modal-side-bar').attr('category-id')), 1)
 		removeItem(arrCategory,'#modal-side-bar','category-id');
 		removeCategory();
 		showCategory();
 	});
 
 	$('#delete-todo').click(function(){
+<<<<<<< HEAD
 		var dataConfirm = confirm("Bạn muốn xóa task item?");
 		if(dataConfirm == true){
 			removeItem(arrTaskItem,'#context-item','item-task-id');
@@ -567,6 +657,17 @@ $(document).ready(function(){
 		}
 	});
 
+=======
+		$('#context-item').css('display','none');
+		var id = $('#context-item').attr('item-task-id');
+		showConfirmRemoveTaskItem(id);
+		console.log(id);
+		removeTaskItem(id);
+
+	});
+
+	//Drag Event
+>>>>>>> hp
 
 
 });
