@@ -652,6 +652,20 @@ $(document).ready(function(){
 			showItemTaskCenter(arrTaskItem);
 		}
 	});
+	$('#center-task').sortable();
+	$('#center-task').sortable();
+    $( "#center-task, #task-complete" ).sortable({  
+        connectWith: "#center-task, #task-complete",
+        update: function(event, ui) {  
+        	
+        } ,
+        stop: function(event,ui){
+        	ui.item.find('span[class=icon-item-task]').click();
+        	if(ui.item.attr('class').indexOf('active') >-1){
+        		showMainRigt(ui.item.attr('data-id'));
+        	}
+        }
+    }); 
 	
 
 });
