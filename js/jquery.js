@@ -653,7 +653,50 @@ $(document).ready(function(){
 		}
 	});
 
-
+	$("#test-drag").draggable({
+	    scroll: false,
+	    axis: "y",
+	    containment: "#center-mid-content",
+	    //revert: true,
+	    //helper: "clone",
+	    disable: false,
+	    start: function( event, ui ) {
+	    	console.log(ui);
+	    	//alert('1');
+	    },
+	    drag: function( event, ui ) {
+	    	//alert('2');
+	    },
+	    stop:function( event, ui ) {
+	          //  alert('3');
+	    }
+	});
+	$("#task-complete").droppable({
+	    accept: "#test-drag",
+/*	    class: {
+	          "ui-droppable-active":"ac"
+	          "ui-droppable-hover":"hv"
+	    }*/
+	    acivate: function( event, ui ) {
+	            $(this).css('background','red');
+	            alert('4');
+	    },
+	    over: function( event, ui ) {
+	            $(this).css('background','yellow');
+	             alert('5');
+	   },
+	    out: function( event, ui ) {
+	            $(this).css('background','blue');
+	            alert('6');
+	    },
+	    drop: function( event, ui ) {
+	            $(this).css('background','white');
+	            alert('7');
+	    },
+	    deactivate: function( event, ui ) {
+	             alert('8');
+	    },
+	});
 
 
 
