@@ -241,16 +241,40 @@ $(document).ready(function(){
 		return arr[arr.findIndex(item => item.id == id)];
 	}
 
-<<<<<<< HEAD
+	function getArrIndex(arr,id){
+		return arr.findIndex(item => item.id == id);
+	}
+
 	function addSubTask(val){
-		var item = getArrById(arrTaskItem,$('#right-content').attr('itemtask-id'));
+		var id = $('#right-content').attr('itemtask-id');
+		var item = getArrById(arrTaskItem,id);
 		var item_subtask = {
-			'id'		: item.comment[item.comment.length-1].comment_id+1,
+			'subtask_id'		: item.subtask[item.subtask.length-1].subtask_id+1,
 			'content'	: val,
 		}
-		item.comment.push(item_subtask);
+		item.subtask.push(item_subtask);
 	}
-=======
+
+	function addNote(val){
+		var id = $('#right-content').attr('itemtask-id');
+		var item = getArrById(arrTaskItem,id);
+		var item_note = {
+			'note_id'		: item.note[item.note.length-1].note_id+1,
+			'content'		: val,
+		}
+		item.note.push(item_note);
+	}
+
+	function addComment(val){
+		var id = $('#right-content').attr('itemtask-id');
+		var item = getArrById(arrTaskItem,id);
+		var item_comment = {
+			'note_id'		: item.comment[item.comment.length-1].note_id+1,
+			'content'		: val,
+		}
+		item.comment.push(item_comment);		
+	}
+
 	function removeItems(arr,iId){
 		console.log(iId);
 		arr.splice(arr.findIndex(item => item.id == iId), 1);
@@ -269,50 +293,6 @@ $(document).ready(function(){
 			showItemTaskCenter(arrTaskItem);
 		});
 	}
-
-	function addSubTask(id){
-
-	}
-
-	function dragStart(element) {
-  		leaveItem = element;
-	}
-
-	function drop(event) {
-	  event.preventDefault();
-	  var node = leaveItem.cloneNode(true);
-	  hideTaskItem(leaveItem);
-	  var timeOut = setTimeout(function(){
-	  	  	leaveItem.remove();
-	  		leaveItem = null;
-	  },400);
-	  var centerTask = document.getElementById("center-task");
-	  var nodeTarget = event.target;
-	  while(nodeTarget.nodeName != "DIV"){
-	  	nodeTarget = nodeTarget.parentElement;
-	  }
-	  centerTask.insertBefore(node,nodeTarget.nextSibling);
-	  // addEventCenterTaskItem(node);
-	  // removeMarginBottomCenterTaskItem(centerTask);
-	}
-
-	function allowDrop(event) {
-  		event.preventDefault();
-	}
-
-	function dragLeave(nodeTarget,element){
-		var nodeParent = element;
-		while(nodeParent.className != "center-task"){
-			nodeParent = nodeParent.parentElement;
-		}
-		removeMarginBottomCenterTaskItem(nodeParent);
-
-		nodeTarget.style.marginBottom = "1px";
-		nodeTarget.style.boxShadow = "none";
-	}
-
->>>>>>> hp
-	//--------------------------
 
 	//Function addEvent
 	function enterInputAddTask(element,e){
@@ -356,7 +336,6 @@ $(document).ready(function(){
 		addEventCheckBoxSucessTaskItem(element);
 		addEventClickActiveTaskItem(element);
 		addEventMaskStart(element);
-		addEventDrag(element);
 	}
 
 	function addEventActiveMenuSideBar(element){
@@ -630,15 +609,33 @@ $(document).ready(function(){
 
 	$('#input-subtask').keydown(function(e){
 		if(e.keyCode == 13){
-<<<<<<< HEAD
 			addSubTask($(this).val());
-			$('#box-subtask li').remove();
-=======
+			removeAllSubTask();
 			var id = $('#right-content').attr('itemtask-id');
-			addSubTask(id);
->>>>>>> hp
+			showMainRigt(id);
+			$(this).val("");
 		}
 	});
+
+	$('#input-comment').keydown(function(e){
+		if(e.keyCode == 13){
+			addNote($(this).val());
+			removeAllSubTask();
+			var id = $('#right-content').attr('itemtask-id');
+			showMainRigt(id);
+			$(this).val("");
+		}
+	});
+
+	$('#add-comment').keydown(function(e){
+		if(e.keyCode == 13){
+			addComment($(this).val());
+			removeAllSubTask();
+			var id = $('#right-content').attr('itemtask-id');
+			showMainRigt(id);
+			$(this).val("");
+		}		
+	});	
 
 	$('#delete-list').click(function(){
 		removeItem(arrCategory,'#modal-side-bar','category-id');
@@ -647,7 +644,6 @@ $(document).ready(function(){
 	});
 
 	$('#delete-todo').click(function(){
-<<<<<<< HEAD
 		var dataConfirm = confirm("Bạn muốn xóa task item?");
 		if(dataConfirm == true){
 			removeItem(arrTaskItem,'#context-item','item-task-id');
@@ -657,17 +653,8 @@ $(document).ready(function(){
 		}
 	});
 
-=======
-		$('#context-item').css('display','none');
-		var id = $('#context-item').attr('item-task-id');
-		showConfirmRemoveTaskItem(id);
-		console.log(id);
-		removeTaskItem(id);
 
-	});
 
-	//Drag Event
->>>>>>> hp
 
 
 });

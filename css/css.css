@@ -316,6 +316,7 @@ a {
 .mid-content .center-mid-content {
 	padding: 15px;
 	overflow-y: auto;
+	height: 100%;
 }
 
 .mid-content .center-mid-content .add-task {

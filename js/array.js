@@ -97,13 +97,13 @@ var arrTaskItem = [
 			'subtask'		:[
 				{
 					'subtask_id'	:0,
-					'content'	:'asdas1231232',
+					'content'		:'asdas1231232',
 				}
 			],
 			'note'			:[
 				{
-					'note_id'	: 0,
-					'content'	: '1234',
+					'note_id'		: 0,
+					'content'		: '1234',
 				}
 			],
 		},
