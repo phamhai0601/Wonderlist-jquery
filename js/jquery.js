@@ -652,9 +652,5 @@ $(document).ready(function(){
 			showItemTaskCenter(arrTaskItem);
 		}
 	});
-
-
-
-
-
+	
 });
