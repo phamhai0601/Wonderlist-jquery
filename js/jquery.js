@@ -652,13 +652,6 @@ $(document).ready(function(){
 			showItemTaskCenter(arrTaskItem);
 		}
 	});
-<<<<<<< HEAD
-
-
-
-
-
-=======
 	
->>>>>>> msi
+
 });
