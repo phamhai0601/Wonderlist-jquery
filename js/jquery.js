@@ -22,36 +22,39 @@ $(document).ready(function(){
 		$('#list-category li').remove();
 	}
 
-	function showItemTaskCenter(arr){
+	function showItemTaskCenter(arr,val=null){
 		arr.forEach(function(item){
 			if(item.category_id == getIdSideBarMenu()){
-				if(item.status == 0){
-					var item_task = $('<div class="item-task" draggable="true"></div>');
-					item_task.attr('data-id',item.id);
-					item_task.attr('category-id',item.category_id);
-					item_task.html(itemTaskUnSuccess);
-					if(item.start == 1){
-						item_task.find('p + span:last-child').html(iconRedStart);
+				if((val == null) || (val != null && item.title.indexOf(val)> -1)){
+					if(item.status == 0){
+						var item_task = $('<div class="item-task" draggable="true"></div>');
+						item_task.attr('data-id',item.id);
+						item_task.attr('category-id',item.category_id);
+						item_task.html(itemTaskUnSuccess);
+						if(item.start == 1){
+							item_task.find('p + span:last-child').html(iconRedStart);
+						}
+						item_task.find('p > span').text(item.title);
+						$('#center-task').append(item_task);
+					}else{
+						var item_task = $('<div class="item-task" draggable="true"></div>');
+						item_task.attr('data-id',item.id);
+						item_task.attr('category-id',item.category_id);
+						item_task.html(itemTaskSuccess);
+						if(item.start == 1){
+							item_task.find('p + span:last-child').html(iconRedStart);
+						}
+						item_task.find('p > span:first-child').text(item.title);
+						$('#task-complete').append(item_task);
 					}
-					item_task.find('p > span').text(item.title);
-					$('#center-task').append(item_task);
-				}else{
-					var item_task = $('<div class="item-task" draggable="true"></div>');
-					item_task.attr('data-id',item.id);
-					item_task.attr('category-id',item.category_id);
-					item_task.html(itemTaskSuccess);
-					if(item.start == 1){
-						item_task.find('p + span:last-child').html(iconRedStart);
+					if($('#right-content').css('width') != '0px' ){
+						if($('#right-content').attr('itemtask-id') == item.id){
+							item_task.addClass('active');
+						}
 					}
-					item_task.find('p > span:first-child').text(item.title);
-					$('#task-complete').append(item_task);
+					addEventTaskItem(item_task);					
 				}
-				if($('#right-content').css('width') != '0px' ){
-					if($('#right-content').attr('itemtask-id') == item.id){
-						item_task.addClass('active');
-					}
-				}
-				addEventTaskItem(item_task);			
+			
 			}  		
 		});
 	}
@@ -387,7 +390,11 @@ $(document).ready(function(){
 			arrTaskItem[id].status = arrTaskItem[id].status == 0?1:0; 
 			removeItemTaskCenter();
 			showItemTaskCenter(arrTaskItem);
+			if(element.attr('class').indexOf('active') >-1){
+				showMainRigt(element.attr('data-id'));
+			}
 		});
+
 	}
 
 	function addEventClickActiveTaskItem(element){
@@ -588,7 +595,7 @@ $(document).ready(function(){
 		arrTaskItem.sort(compare);
 		$(this).attr('sort',sort == "ASC"?"DESC":"ASC");
 		removeItemTaskCenter();
-		showItemTaskCenter();
+		showItemTaskCenter(arrTaskItem);
 	});
 
 	//search--------------
@@ -654,18 +661,38 @@ $(document).ready(function(){
 	});
 	$('#center-task').sortable();
 	$('#center-task').sortable();
-    $( "#center-task, #task-complete" ).sortable({  
+	var sortableClass;
+    $( "#center-task, #task-complete" ).sortable({ 
         connectWith: "#center-task, #task-complete",
-        update: function(event, ui) {  
-        	
-        } ,
         stop: function(event,ui){
-        	ui.item.find('span[class=icon-item-task]').click();
-        	if(ui.item.attr('class').indexOf('active') >-1){
-        		showMainRigt(ui.item.attr('data-id'));
+        	console.log(sortableClass);
+        	if(sortableClass != event.target.className){
+        		ui.item.find('span[class=icon-item-task]').click();
+        		if(ui.item.attr('class').indexOf('active') >-1){
+        			showMainRigt(ui.item.attr('data-id'));
+        		}
         	}
+
+        },
+        deactivate : function(event,ui){
+        	
+        },
+        over: function(event,ui){
+        	sortableClass = event.target.className;
         }
+
     }); 
-	
+
+    $('#search-task-input').keyup(function(){
+    	console.log($(this).val());
+    	removeItemTaskCenter();
+    	if($(this).val() == ''){
+    		showItemTaskCenter(arrTaskItem);   		
+    	}else{
+			removeItemTaskCenter();
+	    	showItemTaskCenter(arrTaskItem,$(this).val());  		
+    	}	
+    });
+
 
 });
