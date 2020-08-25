@@ -240,6 +240,7 @@ $(document).ready(function(){
 		arr.splice(arr.findIndex(item => item.id == $(selector).attr(id)), 1);
 	}
 
+
 	function getArrById(arr,id){
 		return arr[arr.findIndex(item => item.id == id)];
 	}
@@ -645,9 +646,13 @@ $(document).ready(function(){
 	});	
 
 	$('#delete-list').click(function(){
-		removeItem(arrCategory,'#modal-side-bar','category-id');
-		removeCategory();
-		showCategory();
+		var dataConfirm = confirm("Bạn muốn xóa create list?");
+		if(dataConfirm == true){		
+			removeItem(arrCategory,'#modal-side-bar','category-id');
+			removeCategory();
+			showCategory();
+			$('#modal-side-bar').hide();
+		}
 	});
 
 	$('#delete-todo').click(function(){
@@ -692,6 +697,46 @@ $(document).ready(function(){
 			removeItemTaskCenter();
 	    	showItemTaskCenter(arrTaskItem,$(this).val());  		
     	}	
+    });
+
+    $('#center-head-content').keyup(function(){
+    	var id = $('#right-content').attr('itemtask-id');
+    	arrTaskItem[id].title = $(this).val();
+    	removeItemTaskCenter();
+    	showItemTaskCenter(arrTaskItem);
+
+    });
+    $('#head-right-content-checkbox').click(function(){
+  		var divItem = $(this).parent();
+  		var id = divItem.parent().attr('itemtask-id');
+  		arrTaskItem[id].status = arrTaskItem[id].status == 0?1:0;
+  		removeItemTaskCenter();
+    	showItemTaskCenter(arrTaskItem);
+    	showMainRigt(id);
+    });
+
+    $('#head-right-content-start').click(function(){
+  		var divItem = $(this).parent();
+  		var id = divItem.parent().attr('itemtask-id');
+  		console.log()
+  		arrTaskItem[id].start = arrTaskItem[id].start == 0?1:0;
+  		removeItemTaskCenter();
+    	showItemTaskCenter(arrTaskItem);
+    	showMainRigt(id);	
+    });
+
+    $('#accountSetting button[type=submit]').click(function(){
+    	closeModelAccountSetting();
+    });
+
+    $('#remove-task-item').click(function(){
+		var dataConfirm = confirm("Bạn muốn xóa task item?");
+		if(dataConfirm == true){
+	    	removeItem(arrTaskItem,'#right-content','itemtask-id');
+	    	removeItemTaskCenter();
+	    	showItemTaskCenter(arrTaskItem);
+	    	$('#right-content').css('width','0px');
+		}	
     });
 
 
